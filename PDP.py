@@ -4,10 +4,15 @@
 
 # ---------------------------------------------------------------------------------
 
+import time
+
+start_time = time.time()
+
 # Print the introductory statement
 print ("This is an implementation of the Partial Digest Problem by Aly Listhaus")
 
 # ---------------------------------------------------------------------------------
+
 
 # First, we need to ask the user how many points they want to have
 # Can specify a condition i.e. "Pick the number of points (>= 2 and <= 10): "
@@ -40,8 +45,8 @@ maxLengthList = distances
 while len(listofdistances) < maxLengthList:
     item = int(input("Enter a distance: "))
     listofdistances.append(item)
-    print ("Here's your list of distances so far:", listofdistances)
-print ("Your final list of distances is:", listofdistances)
+    #print ("Here's your list of distances so far:", listofdistances)
+#print ("Your final list of distances is:", listofdistances)
 
 
 # ---------------------------------------------------------------------------------
@@ -54,61 +59,53 @@ deltax = []
 
 # First we need to sort the list of distances so that the first element is the biggest number
 listofdistances.sort(reverse=True)
-print ("Here's the sorted list of distances:", listofdistances)
+#print ("Here's the sorted list of distances:", listofdistances)
 
 # From the sorted list, we pull out the biggest number
 x = listofdistances[0] 	# Because it's in descending order, the value at index 0 is the biggest
-print ("Here's the biggest distance:", x)
+#print ("Here's the biggest distance:", x)
 
 # Now we add the biggest distance to the output
 output.append(x)				# Add the biggest distance 
 output.sort(reverse=False)		# Sort the output in ascending order
-print ("Here's your output so far:", output)
+#print ("Here's your output so far:", output)
 
 # Remove the item we just appended to the output from the original list
 listofdistances.remove(x)
 deltax.append(x)
 listofdistances.sort(reverse=True)
-print ("Here's the revised original list of distances:", listofdistances)
+#print ("Here's the revised original list of distances:", listofdistances)
 
 # ---------------------------------------------------------------------------------
 
+def PDP(i):
+	output.append(i)			# put a in the output list
+	output.sort(reverse=False)	# sort the output list
+	listofdistances.remove(i)	# remove the distance i from the list of distances
+	deltax.append(i)			# add i to the list of used distances
+	#print ("List of distances:", listofdistances)		
+	#print ("Output:", output)
+	#print ("Deltax:", deltax)
+	for j in output:							# check what other distances we can check off by looping through the output
+		if abs(j - i) in listofdistances:		# subtract i from each element in the output and if it's in the list of distances:
+			listofdistances.remove(abs(j - i))	# remove this new distance that we found (j - i) from the list of distances
+			deltax.append(abs(j - i))			# add j - i to the list of used distances
+			#print ("List of distances:", listofdistances)		
+			#print ("Output:", output)
+			#print ("Deltax:", deltax)
+
 for i in listofdistances:
-	a = 0 + i	# a will be 0 plus the element (i.e. a = 0 + 7 = 7) - coming from the left
+	a =  i	# a will be the element coming from the left (i.e. a = 0 + 7 = 7) 
 	z = x - i	# z will be the biggest number minus the element (i.e. 10 - 7 = 3) - coming from the right
 	if a in listofdistances:		# if a is in the list of distances, do the following
-		output.append(i)			# put a in the output list
-		output.sort(reverse=False)	# sort the output list
-		listofdistances.remove(i)	# remove the distance i from the list of distances
-		deltax.append(i)			# add i to the list of used distances
-		print ("List of distances:", listofdistances)		
-		print ("Output:", output)
-		print ("Deltax:", deltax)
-		for j in output:							# check what other distances we can check off by looping through the output
-			if abs(j - i) in listofdistances:		# subtract i from each element in the output and if it's in the list of distances:
-				listofdistances.remove(abs(j - i))	# remove this new distance that we found (j - i) from the list of distances
-				deltax.append(abs(j - i))			# add j - i to the list of used distances
-				print ("List of distances:", listofdistances)		
-				print ("Output:", output)
-				print ("Deltax:", deltax)
+		PDP(i)
 	elif z in listofdistances:		# if a isn't in the list of distances but z is, do the following
-		output.append(i)			# put z in the output list
-		output.sort(reverse=False)	# sort the output list
-		listofdistances.remove(i)	# remove the distance i from the list of distances
-		deltax.append(i)			# add i to the list of used distances
-		print ("List of distances:", listofdistances)			
-		print ("Output:", output)
-		print ("Deltax:", deltax)
-		for j in output:							# check what other distances we can check off by looping through the output
-			if abs(j - i) in listofdistances:		# subtract i from each element in the output and if it's in the list of distances:
-				listofdistances.remove(abs(j - i))	# remove this new distance that we found (j - i) from the list of distances
-				deltax.append(abs(j - i))			# add i to the list of used distances
-				print ("List of distances:", listofdistances)		
-				print ("Output:", output)
-				print ("Deltax:", deltax)
+		PDP(i)
 	else:
 		print ("This isn't solvable!")
 
 print ("Deltax:", deltax)
 print ("Output:", output)
 print ("List of distances:", listofdistances)		# check what our list of distances looks like
+
+print("--- %s seconds ---" % (time.time() - start_time))
